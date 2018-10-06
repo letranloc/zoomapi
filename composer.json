@@ -1,0 +1,26 @@
+{
+    "name": "portaldna/zoomapi",
+    "description": "Zoom API v2 PHP Library.",
+    "version", "0.1",
+    "keywords": ["zoom"],
+    "homepage": "",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Craig Aschbrenner",
+            "email": "craig.aschbrenner@portaldna.com"
+        }
+    ],
+    "type": "library",
+    "require": {
+  		  "php": ">=7.0"
+    },
+  	"require-dev": {
+	  	  "phpunit/phpunit": "5.2.*"
+    },
+	  "autoload": {
+        "psr-4": {
+            "PortalDNA\\ZoomAPI\\": "src/"
+        }
+    }
+}
