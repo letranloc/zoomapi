@@ -1,26 +1,35 @@
 {
-    "name": "portaldna/zoomapi",
-    "description": "Zoom API v2 PHP Library.",
-    "version", "0.1",
-    "keywords": ["zoom"],
-    "homepage": "",
-    "license": "GPL-3.0-or-later",
-    "authors": [
-        {
-            "name": "Craig Aschbrenner",
-            "email": "craig.aschbrenner@portaldna.com"
-        }
-    ],
-    "type": "library",
-    "require": {
-  		  "php": ">=7.0"
-    },
-  	"require-dev": {
-	  	  "phpunit/phpunit": "5.2.*"
-    },
-	  "autoload": {
-        "psr-4": {
-            "PortalDNA\\ZoomAPI\\": "src/"
-        }
+  "name": "portaldna/zoomapi",
+  "description": "Zoom API v2 PHP Library.",
+  "version": "0.1",
+  "keywords": ["zoom", "api", "client"],
+  "license": "GPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "Craig Aschbrenner",
+      "email": "craig.aschbrenner@portaldna.com"
     }
+  ],
+  "type": "library",
+  "require": {
+    "php": ">=7.0",
+    "php-http/client-implementation": "^1.0",
+    "php-http/httplug": "^1.0",
+    "php-http/message-factory": "^1.0",
+    "php-http/discovery": "^1.0",
+    "psr/http-message": "^1.0",
+    "firebase/php-jwt": "^5.0",
+    "php-http/curl-client": "^1.7",
+    "guzzlehttp/psr7": "^1.4",
+    "php-http/message": "^1.7"
+  },
+  "require-dev": {
+    "php-http/mock-client": "^0.3.2",
+    "phpunit/phpunit": "5.2.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "PortalDNA\\ZoomAPI\\": "src/"
+    }
+  }
 }
