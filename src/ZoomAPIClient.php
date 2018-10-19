@@ -102,6 +102,13 @@ class ZoomAPIClient {
   }
 
   /**
+   * Magic API.
+   */
+  public function __get($api) {
+    return $this->api($api);
+  }
+
+  /**
    * Set the Zoom API key.
    *
    * @param string $apiKey
