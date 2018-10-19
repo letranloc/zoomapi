@@ -1,6 +1,6 @@
 <?php
 
-namespace PortalDNA\ZoomAPI;
+namespace ZoomAPI;
 
 /**
  * Every Zoom API Client related Exception implements this interface.
