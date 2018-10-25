@@ -6,9 +6,11 @@ use ZoomAPI\Api\AbstractApi;
 use ZoomAPI\HttpClient\Builder;
 use Http\Client\Common\Plugin\HeaderDefaultsPlugin;
 use Http\Client\Common\Plugin\AuthenticationPlugin;
-use Http\Client\Common\Plugin\AddHostPlugin;
+use Http\Client\Common\Plugin\BaseUriPlugin;
+use Http\Client\Common\Plugin\ContentLengthPlugin;
 use Http\Message\Authentication\Bearer;
 use Http\Discovery\UriFactoryDiscovery;
+use ZoomAPI\Exception\InvalidArgumentException;
 use Firebase\JWT\JWT;
 
 /**
@@ -65,6 +67,7 @@ class ZoomAPIClient {
       'Content-Type' => 'application/json',
       'Accept' => 'application/json',
     ]));
+    $this->httpClientBuilder->addPlugin(new ContentLengthPlugin());
 
     $this->httpClientBuilder->addPlugin(new AuthenticationPlugin(new Bearer($this->generateJwt())));
 
@@ -81,6 +84,26 @@ class ZoomAPIClient {
     return new Api\Users($this);
   }
 
+  public function user($id = NULL) {
+    return new Model\User($this, $id);
+  }
+
+  public function meetings() {
+    return new Api\Meetings($this);
+  }
+
+  public function meeting($id = NULL) {
+    return new Model\Meeting($this, $id);
+  }
+
+  public function webhooks() {
+    return new Api\Webhooks($this);
+  }
+
+  public function webhook($id = NULL) {
+    return new Model\Webhook($this, $id);
+  }
+
   /**
    * Make API calls.
    *
@@ -94,7 +117,10 @@ class ZoomAPIClient {
     switch ($name) {
 
       case 'users':
-        return $this->users();
+        return new Api\Users($this);
+
+      case 'user':
+        return new Api\User($this);
 
       default:
         throw new InvalidArgumentException('Invalid endpoint: "' . $name . '"');
@@ -105,7 +131,7 @@ class ZoomAPIClient {
    * Magic API.
    */
   public function __get($api) {
-    return $this->api($api);
+    return (method_exists($this, $api) && is_callable([$this, $api])) ? $this->$api() : $this->api($api);
   }
 
   /**
@@ -137,8 +163,8 @@ class ZoomAPIClient {
    *   The Zoom API base url.
    */
   public function setUrl($url) {
-    $this->httpClientBuilder->removePlugin(AddHostPlugin::class);
-    $this->httpClientBuilder->addPlugin(new AddHostPlugin(UriFactoryDiscovery::find()->createUri($url)));
+    $this->httpClientBuilder->removePlugin(BaseUriPlugin::class);
+    $this->httpClientBuilder->addPlugin(new BaseUriPlugin(UriFactoryDiscovery::find()->createUri($url)));
     return $this;
   }
 

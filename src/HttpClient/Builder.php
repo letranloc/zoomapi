@@ -95,7 +95,6 @@ class Builder {
         $this->requestFactory
       );
     }
-
     return $this->pluginClient;
   }
 

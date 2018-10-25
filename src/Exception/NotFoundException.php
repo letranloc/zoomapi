@@ -1,6 +1,6 @@
 <?php
 
-namespace PortalDNA\ZoomAPI\Exception;
+namespace ZoomAPI\Exception;
 
 /**
  * Thrown when an item is not found.

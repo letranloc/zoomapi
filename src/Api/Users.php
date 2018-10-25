@@ -2,24 +2,28 @@
 
 namespace ZoomAPI\Api;
 
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
 /**
  * Zoom Users API.
  */
-class Users extends AbstractApi {
+class Users extends AbstractPagerApi {
 
   /**
-   * List users (paginated).
+   * {@inheritdoc}
    */
-  public function list($status = '', $page_size = 0, $page_number = 0) {
-    $params = array_filter([
-      'status' => $status,
-      'page_size' => $page_size,
-      'page_number' => $page_number,
-      // @todo testing only.
-      // 'api_key' => 'cId5ywvrQkC3D9EDVyFpDA',
-      // 'api_secret' => 'ENb88nx9phZQnzhpzOvo7NTZENhcTAbCRFHT',
-    ]);
-    return $this->post('https://api.zoom.us/v2/users', $params);
-  }
+  protected $resourcePath = 'users';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $propertyDefs = [
+    'status' => [
+      'required' => TRUE,
+      'types' => ['string'],
+      'values' => ['active', 'inactive', 'pending'],
+      'default' => 'active',
+    ],
+  ];
 
 }

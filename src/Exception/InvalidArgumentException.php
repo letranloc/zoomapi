@@ -1,9 +1,9 @@
 <?php
 
-namespace PortalDNA\ZoomAPI\Exception;
+namespace ZoomAPI\Exception;
 
 /**
  * Thrown when invalid arguments are passed to the ZoomAPIClient.
  */
-class InvalidArgumentException extends \RuntimeException implements ExceptionInterface {
+class InvalidArgumentException extends \InvalidArgumentException implements ExceptionInterface {
 }
