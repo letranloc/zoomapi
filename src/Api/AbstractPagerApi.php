@@ -12,57 +12,30 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 abstract class AbstractPagerApi extends AbstractApi {
 
   /**
-   * @var int
-   */
-  protected $pageNumber;
-
-  /**
-   * @var int
-   */
-  protected $pageSize;
-
-  /**
-   * @var int
-   */
-  protected $pageCount;
-
-  /**
-   * @var int
-   */
-  protected $totalRecords;
-
-  /**
-   * @var array
-   */
-  protected $query = [];
-
-  /**
-   * @var mixed[]
-   */
-  protected $items = [];
-
-  /**
    * Fetch page of items.
    */
+  public function fetchWithPageInfo(array $params = []) {
+    $params = $this->resolveOptionsBySet($params, 'fetch');
+    return $this->get($this->getResourcePath(), $params);
+  }
+
   public function fetch(array $params = []) {
-    $this->query = $this->resolveOptionsBySet($params, 'fetch');
-    $content = $this->get($this->getResourcePath(), $this->query);
-    $this->updatePager($content);
-    return $this->items;
+    $content = $this->fetchWithPageInfo($params);
+    return $content[$this->getListKey()];
   }
 
   public function fetchAll(array $params = []) {
-    $this->resetPager();
-    $params['page_number'] = $this->pageNumber;
-    $this->fetch($params);
+    $params['page_number'] = 1;
+    $params['page_size'] = 300;
+    $items = [];
 
-    while (count($this->items) < $this->totalRecords && $this->pageNumber < ($this->totalRecords / $this->pageCount)) {
-      $params = $this->query;
+    do {
+      $content = $this->fetchWithPageInfo($params);
+      $items = array_merge($items, $content[$this->getListKey()]);
       $params['page_number']++;
-      $this->fetch($params);
-    }
+    } while ($params['page_number'] <= $content['page_count']);
 
-    return $this->items;
+    return $items;
   }
 
   /**
@@ -87,28 +60,6 @@ abstract class AbstractPagerApi extends AbstractApi {
         'default' => 30,
       ],
     ];
-  }
-
-  /**
-   * Update paging properties.
-   */
-  protected function updatePager(array $content) {
-    $this->pageNumber = $content['page_number'];
-    $this->pageSize = $content['page_size'];
-    $this->pageCount = $content['page_count'];
-    $this->totalRecords = $content['total_records'];
-    $this->items += $content[$this->getListKey()];
-  }
-
-  /**
-   * Reset paging properties.
-   */
-  protected function resetPager() {
-    $this->pageNumber = 1;
-    $this->pageSize = 30;
-    $this->pageCount = 0;
-    $this->totalRecords = 0;
-    $this->items = [];
   }
 
   /**
