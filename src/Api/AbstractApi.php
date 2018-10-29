@@ -3,6 +3,7 @@
 namespace ZoomAPI\Api;
 
 use ZoomAPI\ZoomAPIClient;
+use ZoomAPI\Exception\ApiException;
 use Http\Discovery\StreamFactoryDiscovery;
 use Http\Message\StreamFactory;
 use Psr\Http\Message\ResponseInterface;
@@ -116,6 +117,22 @@ abstract class AbstractApi implements ApiInterface {
   }
 
   /**
+   * Handle Response.
+   */
+  protected function handleResponse(ResponseInterface $response) {
+    $statusCode = $response->getStatusCode();
+
+    if ($statusCode < 200 || $statusCode > 299) {
+      throw new ApiException(
+        sprintf('[%d] Error connecting to the API (%s)', $statusCode, $request->getUri()),
+        $statusCode,
+        $response->getHeaders(),
+        $response->getBody()
+      );
+    }
+  }
+
+  /**
    * Get Response Content.
    */
   protected function getContent(ResponseInterface $response) {
@@ -156,6 +173,8 @@ abstract class AbstractApi implements ApiInterface {
   protected function resolveOptions(array $params, array $propertyDefs) {
     $resolver = new OptionsResolver();
     $resolved = [];
+
+    $this->preResolveOptions($params, $propertyDefs);
 
     foreach ($propertyDefs as $propertyName => $propertyInfo) {
       $resolver->setDefined($propertyName);
@@ -198,6 +217,21 @@ abstract class AbstractApi implements ApiInterface {
     }
 
     return $resolved;
+  }
+
+  /**
+   * Manipulate options before resolving.
+   */
+  protected function preResolveOptions(array &$params, array $propertyDefs) {
+    foreach ($propertyDefs as $property => $propertyDef) {
+      if (!array_key_exists($property, $params)) {
+        continue;
+      }
+
+      if ($propertyDef['types'] == 'int' || (is_array($propertyDef['types']) && in_array('int', $propertyDef['types'])) && is_numeric($params[$property])) {
+        $params[$property] = (int) $params[$property];
+      }
+    }
   }
 
   /**

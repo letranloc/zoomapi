@@ -1,7 +1,7 @@
 {
   "name": "portaldna/zoomapi",
   "description": "Zoom API v2 PHP Library.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "keywords": ["zoom", "api", "client"],
   "license": "GPL-3.0-or-later",
   "homepage": "https://bitbucket.org/portaldna/zoomapi",

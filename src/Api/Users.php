@@ -2,8 +2,6 @@
 
 namespace ZoomAPI\Api;
 
-use Symfony\Component\OptionsResolver\OptionsResolver;
-
 /**
  * Zoom Users API.
  */

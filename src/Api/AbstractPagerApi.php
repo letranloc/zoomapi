@@ -2,8 +2,6 @@
 
 namespace ZoomAPI\Api;
 
-use Symfony\Component\OptionsResolver\OptionsResolver;
-
 /**
  * Abstract class for API list classes.
  *
@@ -12,28 +10,35 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 abstract class AbstractPagerApi extends AbstractApi {
 
   /**
-   * Fetch page of items.
+   * Fetch content.
    */
-  public function fetchWithPageInfo(array $params = []) {
+  public function fetchContent(array $params = [], $resourcePath = '') {
+    $resourcePath = $resourcePath ?: $this->getResourcePath();
     $params = $this->resolveOptionsBySet($params, 'fetch');
-    return $this->get($this->getResourcePath(), $params);
+    return $this->get($resourcePath, $params);
   }
 
+  /**
+   * Fetch list of items.
+   */
   public function fetch(array $params = []) {
-    $content = $this->fetchWithPageInfo($params);
+    $content = $this->fetchContent($params);
     return $content[$this->getListKey()];
   }
 
+  /**
+   * Fetch all items.
+   */
   public function fetchAll(array $params = []) {
     $params['page_number'] = 1;
     $params['page_size'] = 300;
     $items = [];
 
     do {
-      $content = $this->fetchWithPageInfo($params);
+      $content = $this->fetchContent($params);
       $items = array_merge($items, $content[$this->getListKey()]);
       $params['page_number']++;
-    } while ($params['page_number'] <= $content['page_count']);
+    } while (!empty($content['page_count']) && $params['page_number'] <= $content['page_count']);
 
     return $items;
   }

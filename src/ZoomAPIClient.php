@@ -96,6 +96,10 @@ class ZoomAPIClient {
     return new Model\Meeting($this, $id);
   }
 
+  public function recordings() {
+    return new Api\Recordings($this);
+  }
+
   public function webhooks() {
     return new Api\Webhooks($this);
   }
@@ -117,10 +121,19 @@ class ZoomAPIClient {
     switch ($name) {
 
       case 'users':
-        return new Api\Users($this);
+      case 'meetings':
+      case 'recordings':
+      case 'webhooks':
+        return $this->$name();
 
       case 'user':
         return new Api\User($this);
+
+      case 'meeting':
+        return new Api\Meeting($this);
+
+      case 'webhook':
+        return new Api\Webhook($this);
 
       default:
         throw new InvalidArgumentException('Invalid endpoint: "' . $name . '"');
@@ -185,7 +198,7 @@ class ZoomAPIClient {
     $token = [
       'iss' => $this->apiKey,
       // @todo allow for changing expiration.
-      'exp' => time() + 60,
+      'exp' => (time() + 60) * 1000,
     ];
     return JWT::encode($token, $this->apiSecret);
   }

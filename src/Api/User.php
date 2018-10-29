@@ -129,7 +129,7 @@ class User extends AbstractItemApi {
           'types' => 'bool',
         ],
         'chat' => [
-          'types' = 'bool',
+          'types' => 'bool',
           'default' => FALSE,
         ],
         'private_chat' => [
@@ -146,87 +146,87 @@ class User extends AbstractItemApi {
           'default' => 'all',
         ],
         'record_play_voice' => [
-          'types' = 'bool',
+          'types' => 'bool',
         ],
         'file_transfer' => [
-          'types' = 'bool',
+          'types' => 'bool',
           'default' => FALSE,
         ],
         'feedback' => [
-          'types' = 'bool',
+          'types' => 'bool',
           'default' => FALSE,
         ],
         'co_host' => [
-          'types' = 'bool',
+          'types' => 'bool',
           'default' => FALSE,
         ],
         'polling' => [
-          'types' = 'bool',
+          'types' => 'bool',
           'default' => FALSE,
         ],
         'attendee_on_hold' => [
-          'types' = 'bool',
+          'types' => 'bool',
           'default' => FALSE,
         ],
         'annotation' => [
-          'types' = 'bool',
+          'types' => 'bool',
           'default' => FALSE,
         ],
         'remote_control' => [
-          'types' = 'bool',
+          'types' => 'bool',
           'default' => FALSE,
         ],
         'non_verbal_feedback' => [
-          'types' = 'bool',
+          'types' => 'bool',
           'default' => FALSE,
         ],
         'breakout_room' => [
-          'types' = 'bool',
+          'types' => 'bool',
           'default' => FALSE,
         ],
         'remote_support' => [
-          'types' = 'bool',
+          'types' => 'bool',
           'default' => FALSE,
         ],
         'closed_caption' => [
-          'types' = 'bool',
+          'types' => 'bool',
           'default' => FALSE,
         ],
         'group_hd' => [
-          'types' = 'bool',
+          'types' => 'bool',
           'default' => FALSE,
         ],
         'virtual_background' => [
-          'types' = 'bool',
+          'types' => 'bool',
           'default' => FALSE,
         ],
         'far_end_camera_control' => [
-          'types' = 'bool',
+          'types' => 'bool',
           'default' => FALSE,
         ],
         'share_dual_camera' => [
-          'types' = 'bool',
+          'types' => 'bool',
           'default' => FALSE,
         ],
         'attention_tracking' => [
-          'types' = 'bool',
+          'types' => 'bool',
           'default' => FALSE,
         ],
         'waiting_room' => [
-          'types' = 'bool',
+          'types' => 'bool',
           'default' => FALSE,
         ],
         'allow_live_streaming' => [
-          'types' = 'bool',
+          'types' => 'bool',
         ],
         'workplace_by_facebook' => [
-          'types' = 'bool',
+          'types' => 'bool',
         ],
         'custom_live_streaming' => [
-          'types' = 'bool',
+          'types' => 'bool',
         ],
         'custom_service_instructions' => [
-          'types' = 'string',
+          'types' => 'string',
         ],
       ],
     ],
@@ -234,15 +234,15 @@ class User extends AbstractItemApi {
       'types' => 'array',
       'properties' => [
         'jbh_reminder' => [
-          'types' = 'bool',
+          'types' => 'bool',
           'default' => FALSE,
         ],
         'cancel_meeting_reminder' => [
-          'types' = 'bool',
+          'types' => 'bool',
           'default' => FALSE,
         ],
         'alternative_host_reminder' => [
-          'types' = 'bool',
+          'types' => 'bool',
           'default' => FALSE,
         ],
       ],
@@ -251,46 +251,46 @@ class User extends AbstractItemApi {
       'types' => 'array',
       'properties' => [
         'local_recording' => [
-          'types' = 'bool',
+          'types' => 'bool',
         ],
         'cloud_recording' => [
-          'types' = 'bool',
+          'types' => 'bool',
           'default' => FALSE,
         ],
         'record_speaker_view' => [
-          'types' = 'bool',
+          'types' => 'bool',
           'default' => FALSE,
         ],
         'record_gallery_view' => [
-          'types' = 'bool',
+          'types' => 'bool',
           'default' => FALSE,
         ],
         'record_audio_file' => [
-          'types' = 'bool',
+          'types' => 'bool',
           'default' => FALSE,
         ],
         'save_chat_text' => [
-          'types' = 'bool',
+          'types' => 'bool',
           'default' => FALSE,
         ],
         'show_timestamp' => [
-          'types' = 'bool',
+          'types' => 'bool',
           'default' => FALSE,
         ],
         'recording_audio_transcript' => [
-          'types' = 'bool',
+          'types' => 'bool',
         ],
         'auto_recording' => [
-          'types' = 'string',
+          'types' => 'string',
           'values' => ['local', 'cloud', 'none'],
           'default' => 'local',
         ],
         'auto_delete_cmr' => [
-          'types' = 'bool',
+          'types' => 'bool',
           'default' => FALSE,
         ],
         'auto_delete_cmr_days' => [
-          'types' = 'int',
+          'types' => 'int',
           'constraints' => [
             'range' => [1, 60],
           ],
@@ -301,16 +301,16 @@ class User extends AbstractItemApi {
       'types' => 'array',
       'properties' => [
         'third_party_audio' => [
-          'types' = 'bool',
+          'types' => 'bool',
         ],
         'audio_conference_info' => [
-          'types' = 'string',
+          'types' => 'string',
           'constraints' => [
             'maxlength' => 2048,
           ],
         ],
         'show_international_numbers_link' => [
-          'types' = 'bool',
+          'types' => 'bool',
         ],
       ],
     ],
@@ -318,20 +318,20 @@ class User extends AbstractItemApi {
       'types' => 'array',
       'properties' => [
         'meeting_capacity' => [
-          'types' = 'int',
+          'types' => 'int',
         ],
         'large_meeting' => [
-          'types' = 'bool',
+          'types' => 'bool',
         ],
         'large_meeting_capacity' => [
-          'types' = 'int',
+          'types' => 'int',
           'values' => [100, 200, 300, 500],
         ],
         'webinar' => [
-          'types' = 'bool',
+          'types' => 'bool',
         ],
         'webinar_capacity' => [
-          'types' = 'int',
+          'types' => 'int',
           'values' => [100, 500, 1000, 3000, 5000, 10000],
         ],
       ],
@@ -387,6 +387,7 @@ class User extends AbstractItemApi {
    */
   public function password($userId, $password) {
     $this->validateId($userId);
+    $params = ['password' => $password];
     $params = $this->resolveOptionsBySet($params, 'password');
     return $this->put($this->getResourcePath($userId) . '/password', $params);
   }
@@ -396,6 +397,7 @@ class User extends AbstractItemApi {
    */
   public function email($userId, $email) {
     $this->validateId($userId);
+    $params = ['email' => $email];
     $params = $this->resolveOptionsBySet($params, 'email');
     return $this->put($this->getResourcePath($userId) . '/email', $params);
   }
