@@ -16,10 +16,10 @@ class Recordings extends AbstractPagerApi {
    * set size.
    */
   public function fetchUserMeetingRecordings($userId, array $params = []) {
-    $params = $this->resolveOptionsBySet($params, 'fetchUserMeetingRecordings');
     $resourcePath = "users/{$userId}/recordings";
-    $content = $this->fetchContent($params, $resourcePath);
-    return $content;
+    unset($params['user_id']);
+    $params = $this->resolveOptionsBySet($params, 'fetchUserMeetingRecordings');
+    return $this->get($resourcePath, $params);
   }
 
   /**
@@ -27,6 +27,7 @@ class Recordings extends AbstractPagerApi {
    */
   public function fetchMeetingRecordings($meetingId, array $params = []) {
     $resourcePath = "meetings/{$meetingId}/recordings";
+    unset($params['meeting_id']);
     $content = $this->fetchContent($params, $resourcePath);
     return $content;
   }
@@ -39,7 +40,35 @@ class Recordings extends AbstractPagerApi {
       return $this->fetchMeetingRecordings($params['meeting_id'], $params);
     }
     elseif (!empty($params['user_id'])) {
-      return $this->fetchUserMeetingRecordings($params['user_id'], $params);
+      $content = $this->fetchUserMeetingRecordings($params['user_id'], $params);
+      return $content['meetings'];
+    }
+
+    throw new InvalidArgumentException('A "user_id" or "meeting_id" is required to fetch a list of recordings.');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function fetchAll(array $params = []) {
+    if (!empty($params['meeting_id'])) {
+      return $this->fetch($params);
+    }
+    elseif (!empty($params['user_id'])) {
+      $params['from'] = date('Y-m-d', strtotime('-120 days'));
+      $params['to'] = date('Y-m-d', time());
+      $params['page_size'] = 300;
+      $pageNum = 1;
+      $items = [];
+
+      do {
+        $content = $this->fetchUserMeetingRecordings($params['user_id'], $params);
+        $items = array_merge($items, $content['meetings']);
+        $pageNum++;
+        $params['next_page_token'] = $content['next_page_token'];
+      } while (!empty($content['next_page_token']) && $pageNum <= $content['page_count']);
+
+      return $items;
     }
 
     throw new InvalidArgumentException('A "user_id" or "meeting_id" is required to fetch a list of recordings.');
@@ -60,11 +89,13 @@ class Recordings extends AbstractPagerApi {
           'types' => 'string',
           'required' => TRUE,
           'normalizer' => 'datetime',
+          'default' => date('Y-m-d', strtotime('-30 days')),
         ];
         $defs['to'] = [
           'types' => 'string',
           'required' => TRUE,
           'normalizer' => 'datetime',
+          'default' => date('Y-m-d', time()),
         ];
         $defs['next_page_token'] = [
           'types' => 'string',
@@ -77,7 +108,14 @@ class Recordings extends AbstractPagerApi {
           'types' => 'bool',
           'default' => FALSE,
         ];
-        $properties = ['from', 'to', 'next_page_token', 'mc', 'trash'];
+        $properties = [
+          'from',
+          'to',
+          'page_size',
+          'next_page_token',
+          'mc',
+          'trash',
+        ];
         break;
     }
 

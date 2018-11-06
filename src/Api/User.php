@@ -376,8 +376,9 @@ class User extends AbstractItemApi {
   /**
    * Update a user's status.
    */
-  public function status($userId, array $params = []) {
+  public function status($userId, $action) {
     $this->validateId($userId);
+    $params = ['action' => $action];
     $params = $this->resolveOptionsBySet($params, 'status');
     return $this->put($this->getResourcePath($userId) . '/status', $params);
   }
@@ -400,6 +401,26 @@ class User extends AbstractItemApi {
     $params = ['email' => $email];
     $params = $this->resolveOptionsBySet($params, 'email');
     return $this->put($this->getResourcePath($userId) . '/email', $params);
+  }
+
+  /**
+   * Delete a user account.
+   */
+  public function deleteUser($userId, $params) {
+    $this->validateId($userId);
+    $params['action'] = 'delete';
+    $params = $this->resolveOptionsBySet($params, 'remove');
+    return $this->delete($this->getResourcePath($userId), $params);
+  }
+
+  /**
+   * Disassociate a user account.
+   */
+  public function disassociateUser($userId, array $params = []) {
+    $this->validateId($userId);
+    $params['action'] = 'disassociate';
+    $params = $this->resolveOptionsBySet($params, 'remove');
+    return $this->delete($this->getResourcePath($userId), $params);
   }
 
   /**
@@ -443,7 +464,13 @@ class User extends AbstractItemApi {
         ];
         break;
 
+      case 'email':
+        $properties = ['email'];
+        break;
+
       case 'remove':
+        $defs['action']['values'] = ['delete', 'disassociate'];
+        $defs['action']['default'] = 'disassociate';
         $properties = [
           'action',
           'transfer_email',

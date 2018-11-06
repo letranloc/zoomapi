@@ -194,7 +194,9 @@ class Meeting extends AbstractApi {
    */
   public function create(array $params = []) {
     $params = $this->resolveOptionsBySet($params, 'create');
-    return $this->createForUser($params['user_id'], $params);
+    $userId = $params['user_id'];
+    unset($params['user_id']);
+    return $this->createForUser($userId, $params);
   }
 
   /**

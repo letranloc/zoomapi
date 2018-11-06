@@ -23,7 +23,13 @@ abstract class AbstractPagerApi extends AbstractApi {
    */
   public function fetch(array $params = []) {
     $content = $this->fetchContent($params);
-    return $content[$this->getListKey()];
+    $key = $this->getListKey();
+
+    if (!isset($content[$key])) {
+      throw new ApiException(sprintf('Error: Response content missing (%s) element.', $key));
+    }
+
+    return $content[$key];
   }
 
   /**

@@ -37,13 +37,13 @@ abstract class AbstractApi implements ApiInterface {
   protected $client;
 
   /**
-   * @var StreamFactory
+   * @var Http\Message\StreamFactory
    */
   private $streamFactory;
 
   /**
-   * @param ZoomApi\ZoomApiClient $client
-   * @param Http\Message\StreamFactory:null $streamFactory
+   * @param ZoomApi\ZoomAPIClient $client
+   * @param Http\Message\StreamFactory|null $streamFactory
    */
   public function __construct(ZoomAPIClient $client, StreamFactory $streamFactory = NULL) {
     $this->client = $client;
@@ -59,7 +59,8 @@ abstract class AbstractApi implements ApiInterface {
    */
   protected function getAsResponse($path, array $params = []) {
     $path = $this->preparePath($path, $params);
-    return $this->client->getHttpClient()->get($path);
+    $response = $this->client->getHttpClient()->get($path);
+    return $this->handleResponse($response);
   }
 
   /**
@@ -84,7 +85,7 @@ abstract class AbstractApi implements ApiInterface {
   protected function post($path, array $params = []) {
     $path = $this->preparePath($path);
     $body = json_encode($params);
-    $response = $this->client->getHttpClient()->post($path, [], $body);
+    $response = $this->handleResponse($this->client->getHttpClient()->post($path, [], $body));
     return $this->getContent($response);
   }
 
@@ -98,7 +99,21 @@ abstract class AbstractApi implements ApiInterface {
   protected function patch($path, array $params = []) {
     $path = $this->preparePath($path);
     $body = json_encode($params);
-    $response = $this->client->getHttpClient()->patch($path, [], $body);
+    $response = $this->handleResponse($this->client->getHttpClient()->patch($path, [], $body));
+    return $this->getContent($response);
+  }
+
+  /**
+   * PUT.
+   *
+   * @param string $path
+   * @param array $params
+   * @return mixed
+   */
+  protected function put($path, array $params = []) {
+    $path = $this->preparePath($path);
+    $body = json_encode($params);
+    $response = $this->handleResponse($this->client->getHttpClient()->put($path, [], $body));
     return $this->getContent($response);
   }
 
@@ -112,7 +127,7 @@ abstract class AbstractApi implements ApiInterface {
   protected function delete($path, array $params = []) {
     $path = $this->preparePath($path);
     $body = json_encode($params);
-    $response = $this->client->getHttpClient()->delete($path, [], $body);
+    $response = $this->handleResponse($this->client->getHttpClient()->delete($path, [], $body));
     return $this->getContent($response);
   }
 
@@ -123,13 +138,20 @@ abstract class AbstractApi implements ApiInterface {
     $statusCode = $response->getStatusCode();
 
     if ($statusCode < 200 || $statusCode > 299) {
+      $content = json_decode($response->getBody()->__toString());
+      $zoomCode = !empty($content->code) ? $content->code : 0;
+      $zoomMsg = !empty($content->message) ? $content->message : '';
+
+      // @todo
       throw new ApiException(
-        sprintf('[%d] Error connecting to the API (%s)', $statusCode, $request->getUri()),
+        sprintf('[%d] Error handling response. [%d] (%s)', $statusCode, $zoomCode, $zoomMsg),
         $statusCode,
-        $response->getHeaders(),
-        $response->getBody()
+        NULL,
+        $response->getBody()->__toString()
       );
     }
+
+    return $response;
   }
 
   /**

@@ -26,7 +26,7 @@ class Webhooks extends AbstractPagerApi {
       ],
     ];
     $params = $this->resolveOptions($params, $defs);
-    return $this->patch($this->getResourcePath() . '/options');
+    return $this->patch($this->getResourcePath() . '/options', $params);
   }
 
 }

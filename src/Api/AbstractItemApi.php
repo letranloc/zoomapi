@@ -23,7 +23,8 @@ abstract class AbstractItemApi extends AbstractApi {
   public function fetch($id, array $params = []) {
     $this->validateId($id);
     $params = $this->resolveOptionsBySet($params, 'fetch');
-    return $this->get($this->getResourcePath($id), $params);
+    $content = $this->get($this->getResourcePath($id), $params);
+    return $content;
   }
 
   /**
