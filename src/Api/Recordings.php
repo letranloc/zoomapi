@@ -63,9 +63,17 @@ class Recordings extends AbstractPagerApi {
 
       do {
         $content = $this->fetchUserMeetingRecordings($params['user_id'], $params);
-        $items = array_merge($items, $content['meetings']);
-        $pageNum++;
-        $params['next_page_token'] = $content['next_page_token'];
+
+        // This is a work-around for inconsistent API responses. When looking
+        // for meeting recordings an error code will be given when recordings
+        // are not found, however when looking for user recordings, a 200 HTTP
+        // code is provided but total records = 0 and the response is missing
+        // the 'meetings' element.
+        if (!empty($content['meetings'])) {
+          $items = array_merge($items, $content['meetings']);
+          $pageNum++;
+          $params['next_page_token'] = $content['next_page_token'];
+        }
       } while (!empty($content['next_page_token']) && $pageNum <= $content['page_count']);
 
       return $items;
