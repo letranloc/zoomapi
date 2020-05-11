@@ -58,7 +58,7 @@ class Meeting extends AbstractApi {
       'types' => 'string',
       'constraints' => [
         'maxlength' => 10,
-        'regex' => '[a-zA-Z0-9@\-_*]'
+        'regex' => '[^a-zA-Z0-9@\-_\*]',
       ],
     ],
     'agenda' => [

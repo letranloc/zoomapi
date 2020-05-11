@@ -314,6 +314,13 @@ abstract class AbstractApi implements ApiInterface {
   }
 
   /**
+   * Resolve constraint (regex).
+   */
+  protected function resolveOptionConstraintRegex($value, $pattern):bool {
+    return preg_match_all($pattern, $value) === 0;
+  }
+
+  /**
    * Pepare path encoding query.
    */
   private function preparePath($path, array $params = []) {
