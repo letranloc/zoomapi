@@ -7,7 +7,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Zoom Meeting API.
  */
-class Meeting extends AbstractApi {
+class Meeting extends AbstractApi
+{
 
   /**
    * {@inheritdoc}
@@ -162,6 +163,10 @@ class Meeting extends AbstractApi {
           'values' => ['local', 'cloud', 'none'],
           'default' => 'none',
         ],
+        'encryption_type' => [
+          'types' => 'string',
+          'values' => ['enhanced_encryption', 'e2ee'],
+        ],
         'enforce_login' => [
           'types' => 'bool',
         ],
@@ -169,6 +174,19 @@ class Meeting extends AbstractApi {
           'types' => 'string',
         ],
         'alternative_hosts' => [
+          'types' => 'string',
+        ],
+        'show_share_button' => [
+          'types' => 'bool',
+          'default' => FALSE,
+        ],
+        'waiting_room' => [
+          'types' => 'bool',
+        ],
+        'contact_name' => [
+          'types' => 'string',
+        ],
+        'contact_email' => [
           'types' => 'string',
         ],
       ],
@@ -192,7 +210,8 @@ class Meeting extends AbstractApi {
   /**
    * Create Meeting.
    */
-  public function create(array $params = []) {
+  public function create(array $params = [])
+  {
     $params = $this->resolveOptionsBySet($params, 'create');
     $userId = $params['user_id'];
     unset($params['user_id']);
@@ -202,15 +221,22 @@ class Meeting extends AbstractApi {
   /**
    * Create Meeting for User.
    */
-  public function createForUser($userId, array $params = []) {
+  public function createForUser($userId, array $params = [])
+  {
     $params = $this->resolveOptionsBySet($params, 'createForUser');
     return $this->post("users/{$userId}/meetings", $params);
+  }
+
+  public function remove($meetingId)
+  {
+    return $this->delete("meetings/{$meetingId}");
   }
 
   /**
    * Update meeting status.
    */
-  public function status($meetingId, array $params = []) {
+  public function status($meetingId, array $params = [])
+  {
     $params = $this->resolveOptionsBySet($params, 'status');
     return $this->put($this->getResourcePath($meetingId) . '/status', $params);
   }
@@ -218,7 +244,8 @@ class Meeting extends AbstractApi {
   /**
    * {@inheritdoc}
    */
-  protected function getPropertyDefs($setName = '') {
+  protected function getPropertyDefs($setName = '')
+  {
     $defs = parent::getPropertyDefs($setName);
     $properties = [];
 
@@ -266,5 +293,4 @@ class Meeting extends AbstractApi {
     $defs = array_intersect_key($defs, array_combine($properties, $properties));
     return $defs;
   }
-
 }

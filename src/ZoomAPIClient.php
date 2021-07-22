@@ -18,7 +18,8 @@ use Firebase\JWT\JWT;
  *
  * @todo add property-read statements.
  */
-class ZoomAPIClient {
+class ZoomAPIClient
+{
 
   /**
    * The Zoom API Url.
@@ -58,7 +59,8 @@ class ZoomAPIClient {
    * @param ZoomAPI\HttpClient\Builder|null $httpClientBuilder
    *   The Http Client Builder.
    */
-  public function __construct($apiKey, $apiSecret, Builder $httpClientBuilder = NULL) {
+  public function __construct($apiKey, $apiSecret, Builder $httpClientBuilder = NULL)
+  {
     $this->setApiKey($apiKey);
     $this->setApiSecret($apiSecret);
     $this->httpClientBuilder = $httpClientBuilder ?: new Builder();
@@ -80,32 +82,39 @@ class ZoomAPIClient {
    * @return ZoomAPI\Api\Users
    *   The Users API.
    */
-  public function users() {
+  public function users()
+  {
     return new Api\Users($this);
   }
 
-  public function user($id = NULL) {
+  public function user($id = NULL)
+  {
     return new Model\User($this, $id);
   }
 
-  public function meetings() {
+  public function meetings()
+  {
     return new Api\Meetings($this);
   }
 
-  public function meeting($id = NULL) {
-    return new Model\Meeting($this, $id);
+  public function meeting($id = NULL)
+  {
+    return new Api\Meeting($this, $id);
   }
 
-  public function recordings() {
+  public function recordings()
+  {
     return new Api\Recordings($this);
   }
 
-  public function webhooks() {
+  public function webhooks()
+  {
     return new Api\Webhooks($this);
   }
 
-  public function webhook($id = NULL) {
-    return new Model\Webhook($this, $id);
+  public function webhook($id = NULL)
+  {
+    return new Api\Webhook($this, $id);
   }
 
   /**
@@ -117,7 +126,8 @@ class ZoomAPIClient {
    * @return ZoomAPI\AbstractApi|mixed
    *   Returns the resulting api/response.
    */
-  public function api($name) {
+  public function api($name)
+  {
     switch ($name) {
 
       case 'users':
@@ -143,7 +153,8 @@ class ZoomAPIClient {
   /**
    * Magic API.
    */
-  public function __get($api) {
+  public function __get($api)
+  {
     return (method_exists($this, $api) && is_callable([$this, $api])) ? $this->$api() : $this->api($api);
   }
 
@@ -153,7 +164,8 @@ class ZoomAPIClient {
    * @param string $apiKey
    *   The Zoom API key.
    */
-  public function setApiKey($apiKey) {
+  public function setApiKey($apiKey)
+  {
     // @todo validation.
     $this->apiKey = $apiKey;
   }
@@ -164,7 +176,8 @@ class ZoomAPIClient {
    * @param string $apiSecret
    *   The Zoom API secret.
    */
-  public function setApiSecret($apiSecret) {
+  public function setApiSecret($apiSecret)
+  {
     // @todo validation.
     $this->apiSecret = $apiSecret;
   }
@@ -175,7 +188,8 @@ class ZoomAPIClient {
    * @param string $url
    *   The Zoom API base url.
    */
-  public function setUrl($url) {
+  public function setUrl($url)
+  {
     $this->httpClientBuilder->removePlugin(BaseUriPlugin::class);
     $this->httpClientBuilder->addPlugin(new BaseUriPlugin(UriFactoryDiscovery::find()->createUri($url)));
     return $this;
@@ -187,20 +201,21 @@ class ZoomAPIClient {
    * @return Http\Client\HttpClient
    *   Returns the builder HttpClient.
    */
-  public function getHttpClient() {
+  public function getHttpClient()
+  {
     return $this->httpClientBuilder->getHttpClient();
   }
 
   /**
    * Generate JSON Web Token.
    */
-  public function generateJwt() {
+  public function generateJwt()
+  {
     $token = [
       'iss' => $this->apiKey,
       // @todo allow for changing expiration.
-      'exp' => (time() + 60) * 1000,
+      'exp' => (time() + 86400) * 1000,
     ];
     return JWT::encode($token, $this->apiSecret);
   }
-
 }

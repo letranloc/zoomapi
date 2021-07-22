@@ -29,7 +29,7 @@ class Meetings extends AbstractPagerApi {
    * Fetch list of user meetings.
    */
   public function fetchUserMeetings($userId, array $params = []) {
-    $resourcePath = "users/{$params['user_id']}/meetings";
+    $resourcePath = "users/{$userId}/meetings";
     $content = $this->fetchContent($params, $resourcePath);
     return $content[$this->getListKey()];
   }
@@ -39,7 +39,9 @@ class Meetings extends AbstractPagerApi {
    */
   public function fetch(array $params = []) {
     if (!empty($params['user_id'])) {
-      return $this->fetchUserMeetings($params['user_id'], $params);
+      $userId = $params['user_id'];
+      unset($params['user_id']);
+      return $this->fetchUserMeetings($userId, $params);
     }
 
     throw new InvalidArgumentException('A "user_id" is required to fetch a list of meetings.');
