@@ -1,14 +1,18 @@
 {
-  "name": "portaldna/zoomapi",
+  "name": "letranloc/zoomapi",
   "description": "Zoom API v2 PHP Library.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "keywords": ["zoom", "api", "client"],
   "license": "GPL-3.0-or-later",
-  "homepage": "https://bitbucket.org/portaldna/zoomapi",
+  "homepage": "https://github.com/letranloc/zoomapi",
   "authors": [
     {
       "name": "Craig Aschbrenner",
       "email": "craig.aschbrenner@portaldna.com"
+    },
+    {
+      "name": "Loc Le",
+      "email": "abc@letranloc.com"
     }
   ],
   "type": "library",
